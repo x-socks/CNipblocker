@@ -1,93 +1,74 @@
-# cnipblocker
+# CN IP Blocker (中国大陆IP封禁工具)
 
+一个用于屏蔽中国大陆IP访问指定端口的简易工具。此脚本使用ipset和iptables，通过高效的哈希表方式管理大量IP地址段，实现对特定端口的访问控制。
 
+## 功能特点
 
-## Getting started
+- 自动下载并应用最新的中国大陆IP段列表
+- 支持针对特定端口进行封禁/解封
+- 提供交互式菜单界面，操作简便
+- 自动配置系统启动服务，确保重启后规则依然有效
+- 提供详细的守护进程状态检查
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## 一键安装
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/gitlabvps1/cnipblocker.git
-git branch -M main
-git push -uf origin main
+```bash
+wget -O cnblock.sh https://gitlab.com/gitlabvps1/cnipblocker/-/raw/main/cnblock.sh && chmod +x cnblock.sh && sudo ./cnblock.sh
 ```
 
-## Integrate with your tools
+## 使用方法
 
-- [ ] [Set up project integrations](https://gitlab.com/gitlabvps1/cnipblocker/-/settings/integrations)
+### 菜单模式
+直接运行脚本会显示交互式菜单：
+```bash
+sudo ./cnblock.sh
+```
 
-## Collaborate with your team
+菜单选项：
+1. 查看当前已封禁端口
+2. 封禁端口
+3. 解封端口
+4. 检查服务状态(简易版)
+5. 检查守护进程详细状态
+6. 重新下载IP列表并更新
+0. 退出
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+### 直接封禁端口
+可以通过命令行参数直接封禁指定端口：
+```bash
+sudo ./cnblock.sh 80  # 封禁80端口
+sudo ./cnblock.sh 443  # 封禁443端口
+```
 
-## Test and Deploy
+## 系统要求
 
-Use the built-in continuous integration in GitLab.
+- 支持iptables和ipset的Linux系统
+- root权限
+- 适用于大多数基于Debian的系统(如Ubuntu)和CentOS/RHEL系统
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## 工作原理
 
-***
+脚本使用ipset创建一个包含所有中国大陆IP段的哈希表，然后通过iptables规则将特定端口的来源IP与此表进行匹配，实现高效的屏蔽操作。相比传统的直接在iptables中添加大量规则的方式，此方法大大提高了性能和可维护性。
 
-# Editing this README
+## 注意事项
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+- 脚本需要root权限才能运行
+- 初次运行时会自动安装所需依赖(ipset, iptables, wget)
+- IP段列表基于公开数据，可能存在轻微偏差
+- 系统重启后，规则会自动加载(通过systemd服务或网络启动脚本)
 
-## Suggestions for a good README
+## 故障排除
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+如果遇到问题，可以使用脚本中的"检查守护进程详细状态"功能，它会提供服务状态的详细诊断信息。常见问题包括：
 
-## Name
-Choose a self-explaining name for your project.
+- IP集合未加载：检查ipset是否正确安装
+- 规则未应用：检查iptables服务是否正常运行
+- 守护进程未启动：检查systemd服务状态
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## 贡献
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+欢迎提交问题报告和改进建议！
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## 许可
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+MIT许可证
