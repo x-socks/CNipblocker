@@ -12,9 +12,17 @@
 
 ## 一键安装
 
+### github
+```bash
+wget -O cnblock.sh https://raw.githubusercontent.com/x-socks/CNipblocker/refs/heads/main/cnblock.sh && chmod +x cnblock.sh && sudo ./cnblock.sh
+```
+
+
+### gitlab
 ```bash
 wget -O cnblock.sh https://gitlab.com/gitlabvps1/cnipblocker/-/raw/main/cnblock.sh && chmod +x cnblock.sh && sudo ./cnblock.sh
 ```
+
 
 ## 使用方法
 
