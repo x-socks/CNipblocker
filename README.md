@@ -73,6 +73,24 @@ sudo ./cnblock.sh 443  # 封禁443端口
 - 规则未应用：检查iptables服务是否正常运行
 - 守护进程未启动：检查systemd服务状态
 
+## 使用界面
+
+![image](https://cdn.skyimg.de/up/2025/4/21/ublqm0.webp)
+
+## 实际效果
+
+### 指定端口TCPing：海外可连，大陆封禁
+
+![image](https://cdn.skyimg.net/up/2025/4/29/21480390.webp)
+
+### 其他端口TCPing：正常
+
+![image](https://cdn.skyimg.net/up/2025/4/29/e7298c84.webp)
+
+### ping 正常 
+
+![image](https://cdn.skyimg.net/up/2025/4/29/e169e6dc.webp)
+
 ## 贡献
 
 欢迎提交问题报告和改进建议！
